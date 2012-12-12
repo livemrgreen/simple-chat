@@ -18,7 +18,7 @@ import java.io.*;
 *
 * Method <code> handleMessageFromClient </code> must be defined by
 * a concrete subclass. Several other hook methods may also be
-* overriden.<p>
+* overridden.<p>
 *
 * Several public service methods are provided to applications that use
 * this framework, and several hook methods are also available<p>
@@ -54,7 +54,7 @@ public abstract class AbstractServer implements Runnable
   /**
    * The server timeout while for accepting connections.
    * After timing out, the server will check to see if a command to
-   * stop the server has been issued; it not it will resume accepting
+   * stop the server has been issued; if not it will resume accepting
    * connections.
    * Set to half a second by default.
    */
@@ -182,7 +182,7 @@ public abstract class AbstractServer implements Runnable
    * Sends a message to every client connected to the server.
    * This is merely a utility; a subclass may want to do some checks
    * before actually sending messages to all clients.  This method
-   * can be overriden, but if so it should still perform the general
+   * can be overridden, but if so it should still perform the general
    * function of sending to all clients, perhaps after some kind
    * of filtering is done. Any exception thrown while
    * sending the message to a particular client is ignored.
@@ -222,7 +222,7 @@ public abstract class AbstractServer implements Runnable
    * concrete subclasses to implement messages that do something with
    * each connection (e.g. kill it, send a message to it etc.).
    * Remember that after this array is obtained, some clients
-   * in this migth disconnect. New clients can also connect,
+   * in this might disconnect. New clients can also connect,
    * these later will not appear in the array.
    *
    * @return an array of <code>Thread</code> containing
