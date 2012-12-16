@@ -426,7 +426,7 @@ public abstract class AbstractServer implements Runnable
    * This MUST be implemented by subclasses, who should respond to
    * messages.
    * This method is called by a synchronized method so it is also
-   * implcitly synchronized.
+   * implicitly synchronized.
    *
    * @param msg   the message sent.
    * @param client the connection connected to the client that
