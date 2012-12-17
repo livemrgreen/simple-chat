@@ -3,6 +3,8 @@
 // license found at www.lloseng.com 
 
 import java.io.*;
+
+import server.EchoServer;
 import client.*;
 import common.*;
 
@@ -29,7 +31,7 @@ public class ServerConsole implements ChatIF {
 	/**
 	 * The instance of the client that created this ConsoleChat.
 	 */
-	ChatClient client;
+	EchoServer server;
 
 	// Constructors ****************************************************
 
@@ -42,13 +44,7 @@ public class ServerConsole implements ChatIF {
 	 *            The port to connect on.
 	 */
 	public ServerConsole(String host, int port) {
-		try {
-			client = new ChatClient(host, port, this);
-		} catch (IOException exception) {
-			System.out.println("Error: Can't setup connection!"
-					+ " Terminating client.");
-			System.exit(1);
-		}
+		server = new EchoServer(port, this);
 	}
 
 	// Instance methods ************************************************
@@ -65,7 +61,7 @@ public class ServerConsole implements ChatIF {
 
 			while (true) {
 				message = fromConsole.readLine();
-				client.handleMessageFromClientUI(message);
+				server.handleMessageFromServerUI(message);
 			}
 		} catch (Exception ex) {
 			System.out.println("Unexpected error while reading from console!");
@@ -95,6 +91,8 @@ public class ServerConsole implements ChatIF {
 		String host = "";
 		int port = 0; // The port number
 
+//		verifier si ce n'est pas redondant avec les ccommandes passees
+//		via la console
 		try {
 			port = Integer.parseInt(args[0]); // Get port from command line
 		} catch (Throwable t) {
@@ -105,8 +103,9 @@ public class ServerConsole implements ChatIF {
 		} catch (ArrayIndexOutOfBoundsException e) {
 			host = "localhost";
 		}
-		ServerConsole chat = new ServerConsole(host, DEFAULT_PORT);
-		chat.accept(); // Wait for console data
+		
+		ServerConsole serv = new ServerConsole(host, DEFAULT_PORT);
+		serv.accept(); // Wait for console data
 		
 	}
 }
