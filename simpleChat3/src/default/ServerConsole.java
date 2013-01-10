@@ -2,11 +2,12 @@
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at www.lloseng.com 
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+import common.ChatIF;
 
 import server.EchoServer;
-import client.*;
-import common.*;
 
 /**
  * This class constructs the UI for a chat client. It implements the chat
@@ -36,7 +37,7 @@ public class ServerConsole implements ChatIF {
 	// Constructors ****************************************************
 
 	/**
-	 * Constructs an instance of the ClientConsole UI.
+	 * Constructs an instance of the ServerConsole UI.
 	 * 
 	 * @param host
 	 *            The host to connect to.
@@ -91,7 +92,7 @@ public class ServerConsole implements ChatIF {
 		String host = "";
 		int port = 0; // The port number
 
-//		verifier si ce n'est pas redondant avec les ccommandes passees
+//		verifier si ce n'est pas redondant avec les commandes passees
 //		via la console
 		try {
 			port = Integer.parseInt(args[0]); // Get port from command line

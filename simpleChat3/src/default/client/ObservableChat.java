@@ -6,6 +6,12 @@ import java.util.Observable;
 public class ObservableChat extends Observable {
 	ChatClient obs;
 	AdaptableClient adapt;
+	
+	 public ObservableChat(String host, int port)
+	  {
+	    adapt = new AdaptableClient(host, port, this);
+	  }
+
 
 //	<-----------------------------------------------
 //	<-----------------------------------------------
@@ -15,10 +21,25 @@ public class ObservableChat extends Observable {
 		this.notify(msg);
 	}
 
-	private void notify(Object msg) {
+	public void notify(Object msg) {
 		// delegue le traitement du message aux observateurs via update
 		obs.update(this, msg);
-	}
+	} 
+	
+	
+	
+	public void sendToServer(String message)  {	
+		// Délègue l'envoie d'un message à AdaptableClient
+		try {
+			adapt.sendToServer(message);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+}  
+
+	
 	
 //	<-----------------------------------------------
 //	<-----------------------------------------------
@@ -40,17 +61,11 @@ public class ObservableChat extends Observable {
 	public boolean isConnected() {
 		// TODO Auto-generated method stub
 		return adapt.isConnected();
-	}
+	} 
 
-	public void sendToServer(String message) {
-		// TODO Auto-generated method stub
-		try {
-			adapt.sendToServer(message);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	
+	
+
 
 	public void openConnection() {
 		// TODO Auto-generated method stub
