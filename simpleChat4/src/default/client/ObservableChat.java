@@ -6,14 +6,16 @@ import java.util.Observable;
 public class ObservableChat extends Observable {
 	ChatClient obs;
 	AdaptableClient adapt;
+	
+	 public ObservableChat(String host, int port)
+	  {
+	    adapt = new AdaptableClient(host, port, this);
+	  }
 
-	public ObservableChat(String host, int port) {
-		adapt = new AdaptableClient(host, port, this);
-	}
 
-	// <-----------------------------------------------
-	// <-----------------------------------------------
-
+//	<-----------------------------------------------
+//	<-----------------------------------------------
+	
 	public void handleMessageFromServer(Object msg) {
 		// delegue le traitement du message a chatClient via notify
 		this.notify(msg);
@@ -22,9 +24,11 @@ public class ObservableChat extends Observable {
 	public void notify(Object msg) {
 		// delegue le traitement du message aux observateurs via update
 		obs.update(this, msg);
-	}
-
-	public void sendToServer(String message) {
+	} 
+	
+	
+	
+	public void sendToServer(String message)  {	
 		// Délègue l'envoie d'un message à AdaptableClient
 		try {
 			adapt.sendToServer(message);
@@ -32,14 +36,17 @@ public class ObservableChat extends Observable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	
+}  
 
-	}
-
-	// <-----------------------------------------------
-	// <-----------------------------------------------
-
-	// ----------------------------------------------->
-	// ----------------------------------------------->
+	
+	
+//	<-----------------------------------------------
+//	<-----------------------------------------------
+	
+	
+//	----------------------------------------------->
+//	----------------------------------------------->
 
 	public void closeConnection() {
 		// TODO Auto-generated method stub
@@ -54,7 +61,11 @@ public class ObservableChat extends Observable {
 	public boolean isConnected() {
 		// TODO Auto-generated method stub
 		return adapt.isConnected();
-	}
+	} 
+
+	
+	
+
 
 	public void openConnection() {
 		// TODO Auto-generated method stub
@@ -90,8 +101,8 @@ public class ObservableChat extends Observable {
 		// TODO Auto-generated method stub
 		adapt.quit();
 	}
-
-	// ----------------------------------------------->
-	// ----------------------------------------------->
+	
+//	----------------------------------------------->
+//	----------------------------------------------->
 
 }

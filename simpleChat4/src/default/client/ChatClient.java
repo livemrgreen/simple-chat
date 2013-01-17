@@ -15,10 +15,9 @@ import java.util.Observer;
  * This class overrides some of the methods defined in the abstract superclass
  * in order to give more functionality to the client.
  * 
- * @author Dr Timothy C. Lethbridge
- * @author Dr Robert Lagani&egrave;
- * @author Fran&ccedil;ois B&eacute;langer
- * @version July 2000
+ * @author Emmanuelle Ithier
+ * @author Yannick Paz
+ * @version 17 jan 2013
  */
 public class ChatClient implements Observer {
 	// Instance variables **********************************************
@@ -44,6 +43,15 @@ public class ChatClient implements Observer {
 	 *            The interface type variable.
 	 */
 
+	public ChatClient(String host, int port, ChatIF clientUI, String unId)
+			throws IOException {
+		this.obs = new ObservableClient(host, port);
+		this.obs.addObserver(this);
+		this.clientUI = clientUI;
+		this.id = unId;
+		this.obs.openConnection();
+	}
+	
 	public ChatClient(String host, int port, ChatIF clientUI)
 			throws IOException {
 		this.obs = new ObservableClient(host, port);
@@ -60,14 +68,24 @@ public class ChatClient implements Observer {
 	 *            The message from the server.
 	 */
 	public void handleMessageFromServer(Object msg) {
+		// on teste d'abord si le message du serveur ne contient pas la commande
+		// logoff
 		if (((String) msg).startsWith(CommandTable.logoff)) {
+			// Si c'est le cas, on ferme la connexion.
 			try {
 				this.obs.closeConnection();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+		// Sinon, on teste si le message traduit un changement d'etat
+		else if (((String) msg).equals(ObservableClient.CONNECTION_CLOSED)) {
+			this.connectionClosed();
+		} else if (((String) msg)
+				.equals(ObservableClient.CONNECTION_ESTABLISHED)) {
+			clientUI.display("Connection established with the server.");
 		} else {
+			// Sinon, on affiche le message du serveur
 			clientUI.display(msg.toString());
 		}
 	}
@@ -81,7 +99,6 @@ public class ChatClient implements Observer {
 	 */
 
 	public void handleMessageFromClientUI(String message) throws IOException {
-		// delegue le traitement du message a observableChat
 		try {
 			if (message.startsWith(CommandTable.quit) && this.obs.isConnected()) {
 				this.quit();
@@ -90,14 +107,21 @@ public class ChatClient implements Observer {
 				System.exit(0);
 			} else if (message.startsWith(CommandTable.logoff)
 					&& this.obs.isConnected()) {
+				// Si on souhaite se deconnecter, on notifie le serveur pour
+				// qu'il coupe la connexion de son cote.
 				this.obs.sendToServer(message);
+				// Puis on coupe la connexion du cote du client.
 				this.obs.closeConnection();
 			} else if (message.startsWith(CommandTable.logoff)
 					&& !this.obs.isConnected()) {
 				clientUI.display("You are already disconnected");
 			} else if (message.startsWith(CommandTable.login)
 					&& !this.obs.isConnected()) {
+				// Lorsqu'on saisit un login, on ouvre une connexion avec le
+				// serveur.
 				this.obs.openConnection();
+				// Puis on lui envoie notre login pour qu'il l'associe a
+				// la nouvelle connexion.
 				this.obs.sendToServer(message);
 			} else if (message.startsWith(CommandTable.login)
 					&& this.obs.isConnected()) {
@@ -139,30 +163,32 @@ public class ChatClient implements Observer {
 	 */
 	public void quit() {
 		try {
+			// Lorsqu'on veut quitter, on demande d'abord au serveur de nous
+			// deconnecter.
 			this.obs.sendToServer(CommandTable.logoff);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		try {
+			// Puis on coupe la connexion depuis le client.
 			this.obs.closeConnection();
 		} catch (IOException e) {
 		}
+		// Enfin, on arrete l'execution
 		System.exit(0);
 	}
 
-	// <-----------------------------------------------
-	// <-----------------------------------------------
-
+	// La methode update se charge de traiter les messages provenant du serveur
+	// selon qu'ils soient des exceptions ou des messages classiques.
 	public void update(Observable o, Object arg) {
 		if (arg instanceof Exception) {
+			// Si le message recu est une exception, on appelle la methode
+			// traitant les exceptions de connexion.
 			this.connectionException((Exception) arg);
-		} else if (((String) arg).equals(ObservableClient.CONNECTION_CLOSED)) {
-			this.connectionClosed();
-		} else if (((String) arg)
-				.equals(ObservableClient.CONNECTION_ESTABLISHED)) {
-			clientUI.display("Connection established with the server.");
 		} else {
+			// Sinon, on envoie le message a la methode
+			// traitant les messages classiques recus depuis le serveur
 			this.handleMessageFromServer((String) arg);
 		}
 	}
