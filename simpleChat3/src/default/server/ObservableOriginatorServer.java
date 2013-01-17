@@ -5,6 +5,7 @@
 package server;
 
 import ocsf.server.ConnectionToClient;
+import ocsf.server.OriginatorMessage;
 
 /**
  * The <code> ObservableOriginatorServer </code> is a subclass of

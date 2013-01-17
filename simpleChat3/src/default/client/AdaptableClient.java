@@ -1,9 +1,8 @@
 package client;
 
 import java.io.IOException;
-import java.util.Observable;
 
-import ocsf.client.*;
+import ocsf.client.AbstractClient;
 
 public class AdaptableClient extends AbstractClient {
 	ObservableChat obs;
@@ -12,26 +11,23 @@ public class AdaptableClient extends AbstractClient {
 		super(host, port);
 		// TODO Auto-generated constructor stub
 	}
-	public AdaptableClient(String host, int port,ObservableChat obs) {
+
+	public AdaptableClient(String host, int port, ObservableChat obs) {
 		super(host, port);
-		this.obs=obs;
+		this.obs = obs;
 		// TODO Auto-generated constructor stub
 	}
 
-//	<-----------------------------------------------
-//	<-----------------------------------------------
-	
+	// <-----------------------------------------------
+	// <-----------------------------------------------
+
 	protected void handleMessageFromServer(Object msg) {
 		// delegue le traitement du message a ObservableChat
 		obs.handleMessageFromServer(msg);
 	}
-	
 
-	
-	
-	
-//	<-----------------------------------------------
-//	<-----------------------------------------------
+	// <-----------------------------------------------
+	// <-----------------------------------------------
 
 	/**
 	 * This method terminates the client.
@@ -67,10 +63,5 @@ public class AdaptableClient extends AbstractClient {
 		System.out.println("le serveur n'est plus disponible, deconnexion...");
 		quit();
 	}
-	
-	
-	
+
 }
-
-
-

@@ -2,12 +2,11 @@
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at www.lloseng.com
 
-package server;
+package com.lloseng.ocsf.server;
 
-import java.io.IOException;
-import java.util.Observable;
-
-import ocsf.server.ConnectionToClient;
+import java.util.*;
+import java.io.*;
+import java.net.*;
 
 /**
  * This class acts as a subclass of <code>AbstractServer</code>
