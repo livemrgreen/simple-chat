@@ -15,9 +15,10 @@ import java.util.Observer;
  * This class overrides some of the methods defined in the abstract superclass
  * in order to give more functionality to the client.
  * 
- * @author Emmanuelle Ithier
- * @author Yannick Paz
- * @version 17 jan 2013
+ * @author Dr Timothy C. Lethbridge
+ * @author Dr Robert Lagani&egrave;
+ * @author Fran&ccedil;ois B&eacute;langer
+ * @version July 2000
  */
 public class ChatClient implements Observer {
 	// Instance variables **********************************************
@@ -59,17 +60,14 @@ public class ChatClient implements Observer {
 	 *            The message from the server.
 	 */
 	public void handleMessageFromServer(Object msg) {
-		// on teste d'abord si le message du serveur ne contient pas la commande
-		// logoff
 		if (((String) msg).startsWith(CommandTable.logoff)) {
-			// Si c'est le cas, on ferme la connexion.
 			try {
 				this.obs.closeConnection();
 			} catch (IOException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {
-			// Sinon, on affiche le message du serveur
 			clientUI.display(msg.toString());
 		}
 	}
@@ -83,6 +81,7 @@ public class ChatClient implements Observer {
 	 */
 
 	public void handleMessageFromClientUI(String message) throws IOException {
+		// delegue le traitement du message a observableChat
 		try {
 			if (message.startsWith(CommandTable.quit) && this.obs.isConnected()) {
 				this.quit();
@@ -91,21 +90,14 @@ public class ChatClient implements Observer {
 				System.exit(0);
 			} else if (message.startsWith(CommandTable.logoff)
 					&& this.obs.isConnected()) {
-				// Si on souhaite se deconnecter, on notifie le serveur pour
-				// qu'il coupe la connexion de son cote.
 				this.obs.sendToServer(message);
-				// Puis on coupe la connexion du cote du client.
 				this.obs.closeConnection();
 			} else if (message.startsWith(CommandTable.logoff)
 					&& !this.obs.isConnected()) {
 				clientUI.display("You are already disconnected");
 			} else if (message.startsWith(CommandTable.login)
 					&& !this.obs.isConnected()) {
-				// Lorsqu'on saisit un login, on ouvre une connexion avec le
-				// serveur.
 				this.obs.openConnection();
-				// Puis on lui envoie notre login pour qu'il l'associe a
-				// la nouvelle connexion.
 				this.obs.sendToServer(message);
 			} else if (message.startsWith(CommandTable.login)
 					&& this.obs.isConnected()) {
