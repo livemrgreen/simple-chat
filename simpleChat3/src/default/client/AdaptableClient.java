@@ -10,14 +10,13 @@ public class AdaptableClient extends AbstractClient {
 	public AdaptableClient(String host, int port, ObservableChat obs) {
 		super(host, port);
 		this.obs = obs;
-		// TODO Auto-generated constructor stub
 	}
 
 	// <-----------------------------------------------
 	// <-----------------------------------------------
 
 	protected void handleMessageFromServer(Object msg) {
-		// delegue le traitement du message a ObservableChat
+		// Delegue le traitement du message a ObservableChat.
 		obs.handleMessageFromServer(msg);
 	}
 

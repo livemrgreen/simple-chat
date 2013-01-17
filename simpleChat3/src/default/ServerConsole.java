@@ -14,10 +14,9 @@ import server.EchoServer;
  * interface in order to activate the display() method. Warning: Some of the
  * code here is cloned in ServerConsole
  * 
- * @author Fran&ccedil;ois B&eacute;langer
- * @author Dr Timothy C. Lethbridge
- * @author Dr Robert Lagani&egrave;re
- * @version July 2000
+ * @author Emmanuelle Ithier
+ * @author Yannick Paz
+ * @version 17 jan 2013
  */
 public class ServerConsole implements ChatIF {
 	// Class variables *************************************************
@@ -90,10 +89,8 @@ public class ServerConsole implements ChatIF {
 	 */
 	public static void main(String[] args) {
 		String host = "";
-		int port = 0; // The port number
+		int port = -1; // The port number
 
-//		verifier si ce n'est pas redondant avec les commandes passees
-//		via la console
 		try {
 			port = Integer.parseInt(args[0]); // Get port from command line
 		} catch (Throwable t) {
@@ -104,10 +101,15 @@ public class ServerConsole implements ChatIF {
 		} catch (ArrayIndexOutOfBoundsException e) {
 			host = "localhost";
 		}
-		
-		ServerConsole serv = new ServerConsole(host, DEFAULT_PORT);
+
+		// Si le port est inchange, il devient le port par defaut.
+		if (port == -1) {
+			port = DEFAULT_PORT;
+		}
+
+		ServerConsole serv = new ServerConsole(host, port);
 		serv.accept(); // Wait for console data
-		
+
 	}
 }
 // End of ConsoleChat class
